@@ -1,0 +1,30 @@
+image: python:latest
+
+variables:
+  PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
+
+
+cache:
+  paths:
+    - .cache/pip
+    - venv/
+
+
+before_script:
+  - python --version
+  - python -m pip install virtualenv
+  - python -m venv venv
+  - source venv/bin/activate
+  - python -m pip install -r requirements.txt
+  - cd tutorial
+
+
+lint-test:
+  script:
+    - python -m flake8 --ignore E501,W503
+    - python manage.py check
+
+
+unit-test:
+  script:
+    - python manage.py test
